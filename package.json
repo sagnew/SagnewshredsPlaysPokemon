@@ -1,0 +1,24 @@
+{
+  "name": "sagnewshredsplayspokemon",
+  "version": "1.0.0",
+  "description": "A Twitch Plays Pokemon clone using the chat from my Twitch stream as input for the game.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sagnew/SagnewshredsPlaysPokemon.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sagnew/SagnewshredsPlaysPokemon/issues"
+  },
+  "homepage": "https://github.com/sagnew/SagnewshredsPlaysPokemon#readme",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "twilio": "^2.9.1"
+  }
+}
