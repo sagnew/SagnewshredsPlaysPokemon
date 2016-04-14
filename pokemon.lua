@@ -29,12 +29,26 @@ function press_button(button)
     joypad.set(1, input_table)
 end
 
+function has_value (tab, val)
+    for index, value in ipairs (tab) do
+        if value == val then
+            return true
+        end
+    end
+
+    return false
+end
+
+gb_buttons = {'A', 'B', 'up', 'down', 'left', 'right', 'start', 'select'}
+
 while true do
     button = read_file('button.txt')
     if button ~= nil then
-        press_button(button)
-        emu.message('Pressing: ' .. button)
-        os.remove('button.txt')
+        if has_value(gb_buttons, button) then
+            press_button(button)
+            emu.message('Pressing: ' .. button)
+            os.remove('button.txt')
+        end
     end
 
     emu.frameadvance()
