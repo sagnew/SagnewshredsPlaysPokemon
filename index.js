@@ -22,6 +22,7 @@ app.post('/sms', (req, res) => {
   let message = req.body.Body;
   let button = message.toLowerCase();
   let twiml = new twilio.TwimlResponse();
+  let buttonText = 'Buttons: a(7), b(9), start(1), select(3), up(2), down(8), left(4), right(6).';
 
   if(gameboyButtons.indexOf(button) > -1) {
     twiml.message('Thanks for playing Pokemon with me :)');
