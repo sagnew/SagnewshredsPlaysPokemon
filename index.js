@@ -7,7 +7,10 @@ const bodyParser = require('body-parser');
 const twilio = require('twilio');
 
 const app = express();
+
 const gameboyButtons = ['a', 'b', 'left', 'right', 'up', 'down', 'start', 'select'];
+
+const keys = ['', 'start', 'up', 'select', 'left', '', 'right', 'a', 'down', 'b'];
 
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -17,14 +20,41 @@ app.get('/', (req, res) => {
 
 app.post('/sms', (req, res) => {
   let message = req.body.Body;
+  let button = message.toLowerCase();
   let twiml = new twilio.TwimlResponse();
 
-  if(gameboyButtons.indexOf(message.toLowerCase()) > -1) {
+  if(gameboyButtons.indexOf(button) > -1) {
     twiml.message('Thanks for playing Pokemon with me :)');
-    fs.writeFileSync('button.txt', message, 'utf8');
+    if(button === 'a' || button === 'b') {
+      button = button.toUpperCase();
+    }
+    fs.writeFileSync('button.txt', button, 'utf8');
   } else {
     twiml.message('Please send a valid Gameboy button.');
   }
+
+  res.send(twiml.toString());
+});
+
+app.post('/handle-key', (req, res) => {
+  let digitPressed = req.body.Digits;
+  let button = keys[digitPressed];
+
+  if(gameboyButtons.indexOf(button) > -1) {
+    if(button === 'a' || button === 'b') {
+      button = button.toUpperCase();
+    }
+    fs.writeFileSync('button.txt', button, 'utf8');
+  }
+  console.log(digitPressed);
+
+  let twiml = new twilio.TwimlResponse();
+  twiml.gather({
+    numDigits: '1',
+    action: '/handle-key',
+    method: 'POST',
+    timeout: '1000'
+  });
 
   res.send(twiml.toString());
 });
@@ -33,7 +63,12 @@ app.post('/voice', (req, res) => {
   console.log(req.body.Body);
 
   let twiml = new twilio.TwimlResponse();
-  twiml.play('http://demo.brooklynhacker.com/music/classic.mp3');
+  twiml.gather({
+    numDigits: '1',
+    action: '/handle-key',
+    method: 'POST',
+    timeout: '1000'
+  });
 
   res.send(twiml.toString());
 });
