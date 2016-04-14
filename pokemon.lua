@@ -23,10 +23,18 @@ function file_exists(filename)
     end
 end
 
+function press_button(button)
+    input_table = {}
+    input_table[button] = true
+    joypad.set(1, input_table)
+end
+
 while true do
-    text_in_file = read_file('button.txt')
-    if text_in_file ~= nil then
-        emu.message(text_in_file)
+    button = read_file('button.txt')
+    if button ~= nil then
+        press_button(button)
+        emu.message('Pressing: ' .. button)
+        os.remove('button.txt')
     end
 
     emu.frameadvance()
