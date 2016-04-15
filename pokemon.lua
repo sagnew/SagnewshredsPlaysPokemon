@@ -40,15 +40,31 @@ function has_value (tab, val)
 end
 
 gb_buttons = {'A', 'B', 'up', 'down', 'left', 'right', 'start', 'select'}
+pressed_button = ''
+count = 0
+number_of_frames = 5
+button_is_pressed = false
 
 while true do
-    button = read_file('button.txt')
-    if button ~= nil then
-        if has_value(gb_buttons, button) then
-            press_button(button)
-            emu.message('Pressing: ' .. button)
-            os.remove('button.txt')
+    if button_is_pressed == false then
+        button = read_file('button.txt')
+        if button ~= nil then
+            if has_value(gb_buttons, button) then
+                button_is_pressed = true
+                pressed_button = button
+
+                press_button(button)
+                emu.message('Pressing: ' .. button)
+                os.remove('button.txt')
+            end
         end
+    else
+        if count > number_of_frames then
+            button_is_pressed = false
+            count = 0
+        end
+        count = count + 1
+        press_button(pressed_button)
     end
 
     emu.frameadvance()
